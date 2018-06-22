@@ -15,13 +15,18 @@ import {
   withdrawCollateralAsync
 } from './lib/Collateral';
 
-import { getAddressWhiteListAsync, getCollateralPoolContractAddressAsync } from './lib/Contract';
+import {
+  addAddressToWhiteList,
+  getAddressWhiteListAsync,
+  getCollateralPoolContractAddressAsync
+} from './lib/Contract';
 
 import {
   deployMarketCollateralPoolAsync,
   deployMarketContractOraclizeAsync
 } from './lib/Deployment';
 
+<<<<<<< HEAD
 import {
   createOrderHashAsync,
   createSignedOrderAsync,
@@ -29,6 +34,9 @@ import {
   signOrderHashAsync,
   tradeOrderAsync
 } from './lib/Order';
+=======
+import { createOrderHashAsync, signOrderHashAsync, tradeOrderAsync } from './lib/Order';
+>>>>>>> Added get collateral pool address, contract test, refactor docs.
 
 /**
  * The `Market` class is the single entry-point into the MARKET.js library.
@@ -77,7 +85,7 @@ export class Market {
    * @param {string} collateralPoolContractAddress    Address of the MarketCollateralPool
    * @param {BigNumber | number} depositAmount        Amount of ERC20 collateral to deposit
    * @param {ITxParams} txParams                      Transaction parameters
-   * @returns {Promise<boolean>}                      true if successful
+   * @returns {Promise<boolean>}                      Returns true if successful
    */
   public async depositCollateralAsync(
     collateralPoolContractAddress: string,
@@ -96,11 +104,11 @@ export class Market {
    * Gets the user's currently unallocated token balance
    * @param {string} collateralPoolContractAddress    Address of the MarketCollateralPool
    * @param {BigNumber | string} userAddress          Address of user
-   * @returns {Promise<BigNumber|null>}               The user's currently unallocated token balance
+   * @returns {Promise<BigNumber | null>}             The user's currently unallocated token balance or null
    */
   public async getUserAccountBalanceAsync(
     collateralPoolContractAddress: string,
-    userAddress: string
+    userAddress: BigNumber | string
   ): Promise<BigNumber | null> {
     return getUserAccountBalanceAsync(
       this._web3.currentProvider,
@@ -113,7 +121,7 @@ export class Market {
    * Close all open positions post settlement and withdraws all collateral from a expired contract
    * @param {string} collateralPoolContractAddress    Address of the MarketCollateralPool
    * @param {ITxParams} txParams                      Transaction parameters
-   * @returns {Promise<boolean>}                      true if successful
+   * @returns {Promise<boolean>}                      Returns true if successful
    */
   public async settleAndCloseAsync(
     collateralPoolContractAddress: string,
@@ -127,7 +135,7 @@ export class Market {
    * @param {string} collateralPoolContractAddress    Address of the MarketCollateralPool
    * @param {BigNumber | number} withdrawAmount       Amount of ERC20 collateral to withdraw
    * @param {ITxParams} txParams                      Transaction parameters
-   * @returns {Promise<boolean>}                      true if successful
+   * @returns {Promise<boolean>}                      Returns true if successful
    */
   public async withdrawCollateralAsync(
     collateralPoolContractAddress: string,
@@ -145,23 +153,45 @@ export class Market {
   // CONTRACT METHODS
 
   /**
-   * Gets the collateral pool contract address
-   * @param {string} marketContractAddress    Address of the Market contract
-   * @returns {Promise<string>}               The user's currently unallocated token balance
+   * Add an address to the whitelist.
+   * @param {string} marketRegistryContractAddress     Address of the Market Registry contract
+   * @param {string} marketContractAddress             Address of the Market contract to add
+   * @param {ITxParams} txParams                       Transaction parameters
+   * @returns {boolean}                                Returns true/false on success/failure
    */
-  public async getCollateralPoolContractAddressAsync(
-    marketContractAddress: string
-  ): Promise<string> {
-    return getCollateralPoolContractAddressAsync(this._web3.currentProvider, marketContractAddress);
+  public async addAddressToWhiteList(
+    marketRegistryContractAddress: string,
+    marketContractAddress: string,
+    txParams: ITxParams = {}
+  ): Promise<boolean> {
+    return addAddressToWhiteList(
+      this._web3.currentProvider,
+      marketRegistryContractAddress,
+      marketContractAddress,
+      txParams
+    );
   }
 
   /**
    * Get all whilelisted contracts
-   * @param {string} marketContractAddress    Address of the Market contract
-   * @returns {Promise<string>}               The user's currently unallocated token balance
+   * @param {string} marketRegistryContractAddress    Address of the Market Registry contract
+   * @returns {Promise<string[] | null>}              An array of whitelisted addresses or null
    */
-  public async getAddressWhiteListAsync(marketContractAddress: string): Promise<string[]> {
-    return getAddressWhiteListAsync(this._web3.currentProvider, marketContractAddress);
+  public async getAddressWhiteListAsync(
+    marketRegistryContractAddress: string
+  ): Promise<string[] | null> {
+    return getAddressWhiteListAsync(this._web3.currentProvider, marketRegistryContractAddress);
+  }
+
+  /**
+   * Gets the collateral pool contract address
+   * @param {string} marketContractAddress    Address of the Market Registry contract
+   * @returns {Promise<string | null>}        The collateral pool contract address or null
+   */
+  public async getCollateralPoolContractAddressAsync(
+    marketContractAddress: string
+  ): Promise<string | null> {
+    return getCollateralPoolContractAddressAsync(this._web3.currentProvider, marketContractAddress);
   }
 
   // DEPLOYMENT METHODS
@@ -233,26 +263,6 @@ export class Market {
     order: Order | SignedOrder
   ): Promise<string> {
     return createOrderHashAsync(this._web3.currentProvider, orderLibAddress, order);
-  }
-
-  /**
-   * Confirms a signed order is validly signed
-   * @param orderLibAddress
-   * @param signedOrder
-   * @param orderHash
-   * @return boolean if order hash and signature resolve to maker address (signer)
-   */
-  public async isValidSignatureAsync(
-    orderLibAddress: string,
-    signedOrder: SignedOrder,
-    orderHash: string
-  ): Promise<boolean> {
-    return isValidSignatureAsync(
-      this._web3.currentProvider,
-      orderLibAddress,
-      signedOrder,
-      orderHash
-    );
   }
 
   /**

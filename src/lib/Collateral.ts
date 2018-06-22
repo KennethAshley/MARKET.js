@@ -8,10 +8,10 @@ import { ITxParams, MarketCollateralPool } from '@marketprotocol/types';
 /**
  * deposits collateral to a traders account for a given contract address.
  * @param {Provider} provider                       Web3 provider instance.
- * @param {string} collateralPoolContractAddress    address of the MarketCollateralPool
- * @param {BigNumber | number} depositAmount        amount of ERC20 collateral to deposit
- * @param {ITxParams} txParams                      transaction parameters
- * @returns {Promise<boolean>} true if successful
+ * @param {string} collateralPoolContractAddress    Address of the MarketCollateralPool
+ * @param {BigNumber | number} depositAmount        Amount of ERC20 collateral to deposit
+ * @param {ITxParams} txParams                      Transaction parameters
+ * @returns {Promise<boolean>}                      Returns true if successful
  */
 export async function depositCollateralAsync(
   provider: Provider,
@@ -34,14 +34,14 @@ export async function depositCollateralAsync(
 /**
  * Gets the user's currently unallocated token balance
  * @param {Provider} provider                       Web3 provider instance.
- * @param {string} collateralPoolContractAddress    address of the MarketCollateralPool
- * @param {BigNumber | string} userAddress          address of user
- * @returns {Promise<BigNumber|null>}               the user's currently unallocated token balance
+ * @param {string} collateralPoolContractAddress    Address of the MarketCollateralPool
+ * @param {BigNumber | string} userAddress          Address of user
+ * @returns {Promise<BigNumber | null>}             The user's currently unallocated token balance or null
  */
 export async function getUserAccountBalanceAsync(
   provider: Provider,
   collateralPoolContractAddress: string,
-  userAddress: string
+  userAddress: BigNumber | string
 ): Promise<BigNumber | null> {
   const web3: Web3 = new Web3();
   web3.setProvider(provider);
@@ -66,9 +66,9 @@ export async function getUserAccountBalanceAsync(
 /**
  * close all open positions post settlement and withdraws all collateral from a expired contract
  * @param {Provider} provider                       Web3 provider instance.
- * @param {string} collateralPoolContractAddress    address of the MarketCollateralPool
- * @param {ITxParams} txParams                      transaction parameters
- * @returns {Promise<boolean>} true if successful
+ * @param {string} collateralPoolContractAddress    Address of the MarketCollateralPool
+ * @param {ITxParams} txParams                      Transaction parameters
+ * @returns {Promise<boolean>}                      Returns true if successful
  */
 export async function settleAndCloseAsync(
   provider: Provider,
@@ -89,10 +89,10 @@ export async function settleAndCloseAsync(
 /**
  * withdraws collateral from a traders account back to their own address.
  * @param {Provider} provider                       Web3 provider instance.
- * @param {string} collateralPoolContractAddress    address of the MarketCollateralPool
- * @param {BigNumber | number} withdrawAmount        amount of ERC20 collateral to withdraw
- * @param {ITxParams} txParams                      transaction parameters
- * @returns {Promise<boolean>} true if successful
+ * @param {string} collateralPoolContractAddress    Address of the MarketCollateralPool
+ * @param {BigNumber | number} withdrawAmount       Amount of ERC20 collateral to withdraw
+ * @param {ITxParams} txParams                      Transaction parameters
+ * @returns {Promise<boolean>}                      Returns true if successful
  */
 export async function withdrawCollateralAsync(
   provider: Provider,
