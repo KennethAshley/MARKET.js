@@ -26,7 +26,6 @@ import {
   deployMarketContractOraclizeAsync
 } from './lib/Deployment';
 
-<<<<<<< HEAD
 import {
   createOrderHashAsync,
   createSignedOrderAsync,
@@ -34,9 +33,6 @@ import {
   signOrderHashAsync,
   tradeOrderAsync
 } from './lib/Order';
-=======
-import { createOrderHashAsync, signOrderHashAsync, tradeOrderAsync } from './lib/Order';
->>>>>>> Added get collateral pool address, contract test, refactor docs.
 
 /**
  * The `Market` class is the single entry-point into the MARKET.js library.
